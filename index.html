@@ -4,276 +4,316 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>مؤسسة مزاج المواطن | المنظومة العالمية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #1a252f;
-            --accent: #c5a059;
-            --bg: #f4f7f6;
-            --white: #ffffff;
+            --bg-dark: #0a0a0b;
+            --gold: #d4af37;
+            --gold-hover: #f1c40f;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #e0e0e0;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg);
+            background: var(--bg-dark);
+            color: var(--text-main);
             margin: 0;
-            color: var(--primary);
+            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        .page { display: none; animation: fadeIn 0.5s ease; }
+        canvas { position: fixed; top: 0; left: 0; z-index: -1; filter: blur(60px); opacity: 0.5; }
+
+        .page { display: none; animation: fadeIn 0.8s ease-out; }
         .active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
         header {
-            background: var(--white);
-            padding: 15px 5%;
+            padding: 20px 8%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px solid var(--accent);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--gold);
+            position: sticky; top: 0; z-index: 100;
         }
 
-        .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, #2c3e50 100%);
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
+        .logo h1 { 
+            margin: 0; font-size: 24px; font-weight: 900; color: var(--gold); 
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
         }
 
-        .container { max-width: 900px; margin: -30px auto 50px; padding: 0 20px; }
-
-        .card {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        .hero-quote {
+            text-align: center; padding: 60px 20px 30px; max-width: 900px; margin: 0 auto;
         }
 
-        h3.section-title {
-            color: var(--accent);
-            border-right: 4px solid var(--accent);
-            padding-right: 10px;
-            margin: 25px 0 15px;
+        .hero-quote p { font-size: 1.4rem; line-height: 1.8; color: #bdc3c7; font-weight: 600; }
+
+        .container { max-width: 1100px; margin: 0 auto 100px; padding: 0 20px; }
+        
+        .main-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
         }
+
+        h3.title {
+            color: var(--gold); font-size: 1.4rem; margin: 35px 0 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        h3.title::before { content: "●"; font-size: 12px; color: var(--gold); }
 
         .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;
         }
 
-        .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
+        .input-box label { display: block; margin-bottom: 8px; font-weight: 700; color: #aaa; font-size: 14px; }
+        
         input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-family: 'Cairo';
-            box-sizing: border-box;
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+            padding: 12px; border-radius: 10px; color: white; font-family: 'Cairo'; transition: 0.3s;
         }
 
-        .btn-main {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 20px;
+        input:focus, select:focus { border-color: var(--gold); outline: none; }
+
+        .gold-btn {
+            background: linear-gradient(45deg, var(--gold), #f1c40f);
+            color: black; border: none; padding: 18px; border-radius: 15px;
+            font-size: 20px; font-weight: 900; cursor: pointer; width: 100%;
+            margin-top: 40px; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
         }
 
-        table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; }
-        th, td { padding: 12px; border: 1px solid #eee; text-align: right; font-size: 13px; }
-        th { background: #f8f8f8; }
+        /* الإدارة */
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: var(--glass); padding: 20px; border-radius: 15px; text-align: center; border-right: 4px solid var(--gold); }
+        .stat-box span { display: block; font-size: 30px; font-weight: 900; color: var(--gold); }
 
-        .login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .table-wrap { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { text-align: right; color: var(--gold); padding: 15px; border-bottom: 2px solid var(--glass-border); }
+        td { padding: 15px; border-bottom: 1px solid var(--glass-border); font-size: 13px; }
     </style>
 </head>
 <body>
 
+    <canvas id="smokeCanvas"></canvas>
+
     <div id="registerPage" class="page active-page">
         <header>
             <div class="logo"><h1>مؤسسة مزاج المواطن</h1></div>
-            <button onclick="navTo('loginPage')" style="cursor:pointer; border:1px solid #ccc; padding:5px 10px; background:none;">إدارة</button>
+            <button onclick="navTo('loginPage')" style="background:none; border:1px solid var(--gold); color:var(--gold); padding:8px 20px; border-radius:10px; cursor:pointer;">دخول الإدارة</button>
         </header>
 
-        <div class="hero">
-            <h2>استمارة حصر احتياجات "المزاج"</h2>
-            <p>بياناتك تساعدنا في تنظيم التوزيع العادل</p>
-        </div>
+        <section class="hero-quote">
+            <p>"المزاج ليس ترفاً، بل هو لحظة السكينة التي يسرقها الإنسان من ضجيج العالم.. في مؤسسة مزاج المواطن، نحن نحمي حقك في تلك اللحظة."</p>
+        </section>
 
         <div class="container">
-            <div class="card">
+            <div class="main-card">
                 <form id="mainOrderForm">
-                    <h3 class="section-title">👤 البيانات الأساسية</h3>
+                    <h3 class="title">1. البيانات الشخصية والسكن</h3>
                     <div class="form-grid">
-                        <div class="input-group"><label>الاسم الكامل</label><input type="text" id="regName" required></div>
-                        <div class="input-group"><label>رقم الهوية</label><input type="number" id="regId" required></div>
-                        <div class="input-group"><label>رقم الواتساب</label><input type="tel" id="regPhone" required></div>
+                        <div class="input-box"><label>الاسم الرباعي</label><input type="text" id="regName" required></div>
+                        <div class="input-box"><label>رقم الهوية</label><input type="number" id="regId" required></div>
+                        <div class="input-box"><label>رقم الواتساب</label><input type="tel" id="regPhone" required></div>
+                        <div class="input-box">
+                            <label>المحافظة</label>
+                            <select id="regCity">
+                                <option>شمال غزة</option><option>غزة</option><option>الوسطى</option><option>خانيونس</option><option>رفح</option>
+                            </select>
+                        </div>
+                        <div class="input-box"><label>مكان السكن الحالي</label><input type="text" id="regAddress" required placeholder="مخيم، مدرسة، حي"></div>
+                        <div class="input-box">
+                            <label>الحالة الاجتماعية</label>
+                            <select id="regStatus"><option>أعزب</option><option>متزوج</option><option>معيل لأسرة كبيرة</option></select>
+                        </div>
                     </div>
 
-                    <h3 class="section-title">🚬 تفاصيل نوع الدخان</h3>
+                    <h3 class="title">2. تفاصيل المزاج والاحتياج</h3>
                     <div class="form-grid">
-                        <div class="input-group">
-                            <label>نوع التدخين الأساسي</label>
+                        <div class="input-box">
+                            <label>نوع الصنف الأساسي</label>
                             <select id="smokeType">
-                                <option>دخان أجنبي (علب)</option>
-                                <option>دخان محلي (علب)</option>
-                                <option>تبغ فرط (لف عربي)</option>
-                                <option>معسل (أرجيلة)</option>
-                                <option>سحب إلكتروني (فيب)</option>
+                                <option>دخان أجنبي</option><option>دخان محلي</option><option>تبغ فرط (لف)</option><option>معسل</option><option>فيب</option>
                             </select>
                         </div>
-                        <div class="input-group">
-                            <label>الماركة المحددة (مثال: مالبورو أحمر)</label>
-                            <input type="text" id="regBrand" required placeholder="اكتب النوع بدقة">
-                        </div>
-                        <div class="input-group">
-                            <label>الكمية الأسبوعية (بالعلبة أو الأوقية)</label>
-                            <input type="number" id="regQty" required>
+                        <div class="input-box"><label>الماركة المفضلة بدقة</label><input type="text" id="regBrand" required placeholder="مثلاً: مالبورو أحمر"></div>
+                        <div class="input-box"><label>الاحتياج الأسبوعي (علبة)</label><input type="number" id="regQty" required></div>
+                        <div class="input-box">
+                            <label>هل تقبل بأصناف بديلة؟</label>
+                            <select id="regAlt"><option>نعم، أي صنف متاح</option><option>لا، أتمسك بصنفي المفضل</option></select>
                         </div>
                     </div>
 
-                    <h3 class="section-title">🧠 بروفايل المدخن (أسئلة المزاج)</h3>
+                    <h3 class="title">3. بروفايل المدخن (تحليل المزاج)</h3>
                     <div class="form-grid">
-                        <div class="input-group">
-                            <label>منذ متى وأنت مدخن؟</label>
-                            <select id="smokeYears">
-                                <option>أقل من سنة</option>
-                                <option>1 - 5 سنوات</option>
-                                <option>أكثر من 5 سنوات</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label>كيف تصف حالتك عند انقطاع الدخان؟</label>
+                        <div class="input-box">
+                            <label>وصف الحالة عند انقطاع الصنف</label>
                             <select id="moodStatus">
-                                <option>عصبية وتوتر شديد</option>
-                                <option>صداع وعدم تركيز</option>
-                                <option>طبيعي، أستطيع التحمل</option>
+                                <option>عصبية حادة وتوتر</option><option>صداع وعدم تركيز</option><option>طبيعي ومستقر</option>
                             </select>
                         </div>
+                        <div class="input-box"><label>عدد سنوات التدخين</label><input type="number" id="smokeYears"></div>
                     </div>
-                    <div class="input-group">
-                        <label>أغرب شيء فعلته من أجل "سجارة" خلال الأزمة؟ (اختياري)</label>
-                        <textarea id="smokeStory" rows="2" placeholder="اذكر تجربتك..."></textarea>
+                    <div class="input-box" style="margin-top:20px;">
+                        <label>رسالة لمؤسسة مزاج المواطن (اختياري)</label>
+                        <textarea id="smokeStory" rows="3" placeholder="أخبرنا عن معاناتك أو أي ملاحظة خاصة"></textarea>
                     </div>
 
-                    <button type="submit" class="btn-main" id="submitBtn">تأكيد ورفع البيانات</button>
+                    <button type="submit" class="gold-btn" id="submitBtn">تأكيد التسجيل في المنظومة</button>
                 </form>
             </div>
         </div>
     </div>
 
     <div id="loginPage" class="page">
-        <div class="login-screen">
-            <div class="card" style="width: 300px; text-align: center;">
-                <h2>دخول الإدارة</h2>
-                <input type="password" id="passCode" placeholder="كلمة السر">
-                <button onclick="attemptLogin()" class="btn-main">دخول</button>
-                <p onclick="navTo('registerPage')" style="cursor:pointer; font-size:12px; margin-top:10px;">رجوع</p>
+        <div style="height:100vh; display:flex; align-items:center; justify-content:center;">
+            <div class="main-card" style="width:380px; text-align:center;">
+                <h2 style="color:var(--gold)">دخول الإدارة الآمن</h2>
+                <input type="password" id="passCode" placeholder="Code" style="text-align:center; font-size:24px; margin:25px 0;">
+                <button onclick="attemptLogin()" class="gold-btn" style="margin:0">دخول</button>
             </div>
         </div>
     </div>
 
     <div id="adminPage" class="page">
         <header>
-            <h1>لوحة بيانات المزاج</h1>
-            <button onclick="navTo('registerPage')" style="background:red; color:white; border:none; padding:5px 10px;">خروج</button>
+            <div class="logo"><h1>لوحة بيانات مؤسسة مزاج</h1></div>
+            <button onclick="logout()" style="background:var(--gold); color:black; border:none; padding:8px 20px; border-radius:8px; cursor:pointer; font-weight:bold;">خروج</button>
         </header>
-        <div style="padding: 20px;">
-            <div id="adminContent" style="overflow-x: auto;">
-                <table id="dataTable">
-                    <thead>
-                        <tr>
-                            <th>الاسم</th>
-                            <th>النوع</th>
-                            <th>الماركة</th>
-                            <th>الكمية</th>
-                            <th>الحالة النفسية</th>
-                            <th>الإجراء</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
+
+        <div class="container" style="max-width: 1200px; margin-top: 40px;">
+            <div class="stat-grid">
+                <div class="stat-box"><h4>إجمالي المستفيدين</h4><span id="statTotal">0</span></div>
+                <div class="stat-box"><h4>طلبات الدخان</h4><span id="statSmoke">0</span></div>
+                <div class="stat-box"><h4>طلبات المعسل/فيب</h4><span id="statOther">0</span></div>
+            </div>
+
+            <div class="main-card" style="padding: 20px;">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>المستفيد</th>
+                                <th>الهوية</th>
+                                <th>المنطقة</th>
+                                <th>الصنف</th>
+                                <th>الحالة النفسية</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // رابط Firebase لمشروعك mybrojet2
-        const firebaseURL = "https://mybrojet2-default-rtdb.firebaseio.com/orders.json";
+        const fbURL = "https://mybrojet2-default-rtdb.firebaseio.com/orders.json";
 
+        // أنيميشن الدخان
+        const canvas = document.getElementById('smokeCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let particles = [];
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width; this.y = canvas.height + 100;
+                this.size = Math.random() * 80 + 40; this.speed = Math.random() * 0.8 + 0.4;
+                this.opacity = Math.random() * 0.4;
+            }
+            update() { this.y -= this.speed; if (this.y < -100) this.y = canvas.height + 100; }
+            draw() { ctx.fillStyle = `rgba(200, 200, 200, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        for (let i = 0; i < 25; i++) particles.push(new Particle());
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        animate();
+
+        // نظام الصفحات
         function navTo(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.getElementById(pageId).classList.add('active-page');
-            if(pageId === 'adminPage') renderAdminTable();
+            if(pageId === 'adminPage') fetchAdminData();
         }
 
         function attemptLogin() {
             if(document.getElementById('passCode').value === "2005") {
-                navTo('adminPage');
-            } else { alert("خطأ"); }
+                sessionStorage.setItem('isAdmin', 'true'); navTo('adminPage');
+            } else { alert("كلمة السر خاطئة."); }
         }
+        function logout() { sessionStorage.removeItem('isAdmin'); navTo('registerPage'); }
 
         // إرسال البيانات
         document.getElementById('mainOrderForm').onsubmit = async function(e) {
             e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            btn.innerText = "جاري الحفظ...";
-            btn.disabled = true;
+            const btn = document.getElementById('submitBtn'); btn.innerText = "جاري المزامنة..."; btn.disabled = true;
 
             const order = {
                 name: document.getElementById('regName').value,
                 idNum: document.getElementById('regId').value,
                 phone: document.getElementById('regPhone').value,
+                city: document.getElementById('regCity').value,
+                address: document.getElementById('regAddress').value,
+                socialStatus: document.getElementById('regStatus').value,
                 smokeType: document.getElementById('smokeType').value,
                 brand: document.getElementById('regBrand').value,
                 qty: document.getElementById('regQty').value,
-                years: document.getElementById('smokeYears').value,
+                acceptAlt: document.getElementById('regAlt').value,
                 mood: document.getElementById('moodStatus').value,
-                story: document.getElementById('smokeStory').value
+                years: document.getElementById('smokeYears').value,
+                story: document.getElementById('smokeStory').value,
+                date: new Date().getTime()
             };
 
             try {
-                await fetch(firebaseURL, { method: 'POST', body: JSON.stringify(order) });
-                alert("تم استلام بياناتك بنجاح!");
+                await fetch(fbURL, { method: 'POST', body: JSON.stringify(order) });
+                alert("تم تسجيل بياناتك في مؤسسة مزاج المواطن بنجاح.");
                 this.reset();
-            } catch (err) { alert("فشل الاتصال"); }
-            finally { btn.innerText = "تأكيد تسجيل البيانات"; btn.disabled = false; }
+            } catch (err) { alert("خطأ في الاتصال بالسيرفر."); }
+            finally { btn.innerText = "تأكيد التسجيل في المنظومة"; btn.disabled = false; }
         };
 
-        // عرض البيانات
-        async function renderAdminTable() {
+        async function fetchAdminData() {
+            if(sessionStorage.getItem('isAdmin') !== 'true') return navTo('loginPage');
             const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '<tr><td colspan="6">تحميل...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6">تحميل البيانات السحابية...</td></tr>';
+
             try {
-                const res = await fetch(firebaseURL);
+                const res = await fetch(fbURL);
                 const data = await res.json();
                 tbody.innerHTML = '';
+                let count = 0, smoke = 0, other = 0;
                 for (let id in data) {
+                    count++;
                     const item = data[id];
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${item.name}</td>
-                        <td>${item.smokeType}</td>
-                        <td>${item.brand}</td>
-                        <td>${item.qty}</td>
-                        <td>${item.mood}</td>
-                        <td><button onclick="deleteOrder('${id}')" style="color:red; background:none; border:none; cursor:pointer;">حذف</button></td>
-                    `;
-                    tbody.appendChild(tr);
+                    if(item.smokeType.includes("دخان")) smoke++; else other++;
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b style="color:white">${item.name}</b><br><small>${item.phone}</small></td>
+                            <td>${item.idNum}</td>
+                            <td>${item.city}</td>
+                            <td>${item.brand} (${item.qty})</td>
+                            <td>${item.mood}</td>
+                            <td><button onclick="deleteOrder('${id}')" style="color:red; background:none; border:none; cursor:pointer;">حذف</button></td>
+                        </tr>`;
                 }
-            } catch (err) { tbody.innerHTML = '<tr><td colspan="6">خطأ في جلب البيانات</td></tr>'; }
+                document.getElementById('statTotal').innerText = count;
+                document.getElementById('statSmoke').innerText = smoke;
+                document.getElementById('statOther').innerText = other;
+            } catch (e) { tbody.innerHTML = '<tr><td colspan="6">فشل جلب البيانات.</td></tr>'; }
         }
 
         async function deleteOrder(id) {
-            if(confirm("حذف؟")) {
+            if(confirm("حذف المستفيد نهائياً؟")) {
                 await fetch(`https://mybrojet2-default-rtdb.firebaseio.com/orders/${id}.json`, { method: 'DELETE' });
-                renderAdminTable();
+                fetchAdminData();
             }
         }
     </script>
