@@ -7,118 +7,90 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2c3e50; /* كحلي مؤسساتي */
-            --accent-gold: #c5a059;  /* ذهبي هادئ */
-            --bg-light: #f8f9fa;     /* رمادي فاتح جداً */
+            --primary: #1a252f;
+            --accent: #c5a059;
+            --bg: #f4f7f6;
             --white: #ffffff;
-            --success: #27ae60;
-            --danger: #e74c3c;
-            --text-gray: #555;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: var(--bg-light);
+            background-color: var(--bg);
             margin: 0;
-            padding: 0;
-            color: var(--primary-color);
+            color: var(--primary);
         }
 
-        /* نظام الصفحات */
         .page { display: none; animation: fadeIn 0.5s ease; }
         .active-page { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* الهيدر */
         header {
             background: var(--white);
             padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-bottom: 3px solid var(--accent-gold);
+            border-bottom: 3px solid var(--accent);
         }
 
-        .logo h1 { margin: 0; font-size: 20px; color: var(--accent-gold); font-weight: 900; }
-
-        /* واجهة المستخدم - هيرو */
         .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #34495e 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, #2c3e50 100%);
             color: white;
-            padding: 60px 20px;
+            padding: 40px 20px;
             text-align: center;
         }
 
-        .container { max-width: 1000px; margin: -50px auto 50px; padding: 0 20px; }
+        .container { max-width: 900px; margin: -30px auto 50px; padding: 0 20px; }
 
         .card {
             background: var(--white);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
         h3.section-title {
-            color: var(--accent-gold);
-            border-right: 5px solid var(--accent-gold);
-            padding-right: 15px;
-            margin: 30px 0 20px;
-            font-size: 1.2rem;
+            color: var(--accent);
+            border-right: 4px solid var(--accent);
+            padding-right: 10px;
+            margin: 25px 0 15px;
         }
 
-        /* الجداول والشبكة */
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
         }
 
         .input-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; }
         input, select, textarea {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
             font-family: 'Cairo';
             box-sizing: border-box;
         }
 
         .btn-main {
-            background: var(--accent-gold);
+            background: var(--accent);
             color: white;
             border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
+            padding: 15px;
+            border-radius: 8px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             width: 100%;
-            margin-top: 30px;
-            transition: 0.3s;
+            margin-top: 20px;
         }
 
-        .btn-main:hover { background: #a38448; transform: translateY(-2px); }
+        table { width: 100%; border-collapse: collapse; background: white; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #eee; text-align: right; font-size: 13px; }
+        th { background: #f8f8f8; }
 
-        /* لوحة المطور */
-        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .stats-bar { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
-        .stat-item { background: var(--white); padding: 15px 25px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex: 1; text-align: center; }
-        
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; }
-        th { background: #eee; padding: 15px; text-align: right; }
-        td { padding: 15px; border-bottom: 1px solid #eee; font-size: 14px; }
-
-        /* صفحة الدخول */
-        .login-screen {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #eee;
-        }
-        .login-card { background: white; padding: 40px; border-radius: 20px; width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .login-screen { height: 100vh; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -126,73 +98,71 @@
     <div id="registerPage" class="page active-page">
         <header>
             <div class="logo"><h1>مؤسسة مزاج المواطن</h1></div>
-            <button onclick="navTo('loginPage')" style="background:none; border:1px solid #ccc; padding:5px 10px; border-radius:5px; cursor:pointer;">دخول الإدارة</button>
+            <button onclick="navTo('loginPage')" style="cursor:pointer; border:1px solid #ccc; padding:5px 10px; background:none;">إدارة</button>
         </header>
 
         <div class="hero">
-            <h2>منظومة إغاثة احتياجات التبغ</h2>
-            <p>سجل بياناتك بدقة لضمان وصول حصتك الأسبوعية بكرامة</p>
+            <h2>استمارة حصر احتياجات "المزاج"</h2>
+            <p>بياناتك تساعدنا في تنظيم التوزيع العادل</p>
         </div>
 
         <div class="container">
             <div class="card">
                 <form id="mainOrderForm">
-                    <h3 class="section-title">1. البيانات الشخصية والسكن</h3>
+                    <h3 class="section-title">👤 البيانات الأساسية</h3>
                     <div class="form-grid">
-                        <div class="input-group">
-                            <label>الاسم الرباعي</label>
-                            <input type="text" id="regName" required placeholder="محمد أحمد علي...">
-                        </div>
-                        <div class="input-group">
-                            <label>رقم الهوية</label>
-                            <input type="number" id="regId" required placeholder="900000000">
-                        </div>
-                        <div class="input-group">
-                            <label>رقم التواصل (واتساب)</label>
-                            <input type="tel" id="regPhone" required placeholder="059XXXXXXX">
-                        </div>
+                        <div class="input-group"><label>الاسم الكامل</label><input type="text" id="regName" required></div>
+                        <div class="input-group"><label>رقم الهوية</label><input type="number" id="regId" required></div>
+                        <div class="input-group"><label>رقم الواتساب</label><input type="tel" id="regPhone" required></div>
                     </div>
+
+                    <h3 class="section-title">🚬 تفاصيل نوع الدخان</h3>
                     <div class="form-grid">
                         <div class="input-group">
-                            <label>المحافظة</label>
-                            <select id="regCity">
-                                <option>شمال غزة</option><option>غزة</option><option>الوسطى</option><option>خانيونس</option><option>رفح</option>
+                            <label>نوع التدخين الأساسي</label>
+                            <select id="smokeType">
+                                <option>دخان أجنبي (علب)</option>
+                                <option>دخان محلي (علب)</option>
+                                <option>تبغ فرط (لف عربي)</option>
+                                <option>معسل (أرجيلة)</option>
+                                <option>سحب إلكتروني (فيب)</option>
                             </select>
                         </div>
                         <div class="input-group">
-                            <label>مكان السكن الحالي</label>
-                            <input type="text" id="regAddress" required placeholder="مخيم، مدرسة، أو حي">
+                            <label>الماركة المحددة (مثال: مالبورو أحمر)</label>
+                            <input type="text" id="regBrand" required placeholder="اكتب النوع بدقة">
                         </div>
                         <div class="input-group">
-                            <label>المهنة السابقة</label>
-                            <input type="text" id="regJob" placeholder="مثلاً: تاجر، موظف">
+                            <label>الكمية الأسبوعية (بالعلبة أو الأوقية)</label>
+                            <input type="number" id="regQty" required>
                         </div>
                     </div>
 
-                    <h3 class="section-title">2. تفاصيل "المزاج" والطلب</h3>
+                    <h3 class="section-title">🧠 بروفايل المدخن (أسئلة المزاج)</h3>
                     <div class="form-grid">
                         <div class="input-group">
-                            <label>الصنف المطلوب</label>
-                            <select id="regType">
-                                <option>دخان أجنبي</option><option>دخان محلي</option><option>تبغ فرط (لف)</option><option>معسل</option><option>فيب</option>
+                            <label>منذ متى وأنت مدخن؟</label>
+                            <select id="smokeYears">
+                                <option>أقل من سنة</option>
+                                <option>1 - 5 سنوات</option>
+                                <option>أكثر من 5 سنوات</option>
                             </select>
                         </div>
                         <div class="input-group">
-                            <label>الماركة المفضلة</label>
-                            <input type="text" id="regBrand" required placeholder="مثلاً: مالبورو">
-                        </div>
-                        <div class="input-group">
-                            <label>الكمية الأسبوعية (علب)</label>
-                            <input type="number" id="regQty" min="1" max="14" placeholder="كم علبة تحتاج؟">
+                            <label>كيف تصف حالتك عند انقطاع الدخان؟</label>
+                            <select id="moodStatus">
+                                <option>عصبية وتوتر شديد</option>
+                                <option>صداع وعدم تركيز</option>
+                                <option>طبيعي، أستطيع التحمل</option>
+                            </select>
                         </div>
                     </div>
-
                     <div class="input-group">
-                        <label>ملاحظات صحية أو بدائل (اختياري)</label>
-                        <textarea id="regNotes" rows="2" placeholder="هل تقبل بصنف بديل؟ أو هل تعاني من مشاكل تنفسية؟"></textarea>
+                        <label>أغرب شيء فعلته من أجل "سجارة" خلال الأزمة؟ (اختياري)</label>
+                        <textarea id="smokeStory" rows="2" placeholder="اذكر تجربتك..."></textarea>
                     </div>
 
-                    <button type="submit" class="btn-main">تأكيد تسجيل البيانات</button>
+                    <button type="submit" class="btn-main" id="submitBtn">تأكيد ورفع البيانات</button>
                 </form>
             </div>
         </div>
@@ -200,149 +170,110 @@
 
     <div id="loginPage" class="page">
         <div class="login-screen">
-            <div class="login-card">
-                <h2 style="color:var(--accent-gold)">دخول المطور</h2>
-                <p>أدخل كلمة المرور السرية</p>
-                <input type="password" id="passCode" placeholder="كلمة السر" style="text-align:center; margin-bottom:20px;">
-                <button onclick="attemptLogin()" class="btn-main" style="margin:0">دخول النظام</button>
-                <p onclick="navTo('registerPage')" style="cursor:pointer; color:gray; font-size:12px; margin-top:20px;">العودة للرئيسية</p>
+            <div class="card" style="width: 300px; text-align: center;">
+                <h2>دخول الإدارة</h2>
+                <input type="password" id="passCode" placeholder="كلمة السر">
+                <button onclick="attemptLogin()" class="btn-main">دخول</button>
+                <p onclick="navTo('registerPage')" style="cursor:pointer; font-size:12px; margin-top:10px;">رجوع</p>
             </div>
         </div>
     </div>
 
     <div id="adminPage" class="page">
         <header>
-            <div class="logo"><h1>لوحة تحكم المؤسسة</h1></div>
-            <button onclick="navTo('registerPage')" style="background:var(--danger); color:white; border:none; padding:5px 15px; border-radius:5px; cursor:pointer;">تسجيل خروج</button>
+            <h1>لوحة بيانات المزاج</h1>
+            <button onclick="navTo('registerPage')" style="background:red; color:white; border:none; padding:5px 10px;">خروج</button>
         </header>
-
-        <div style="padding: 30px 5%;">
-            <div class="stats-bar">
-                <div class="stat-item">الطلبات الكلية: <b id="statTotal">0</b></div>
-                <div class="stat-item">قيد المراجعة: <b id="statPending">0</b></div>
-                <div class="stat-item">تم التسليم: <b id="statDone">0</b></div>
-            </div>
-
-            <div class="admin-header">
-                <h3>📦 قاعدة بيانات المستفيدين</h3>
-                <input type="text" id="adminSearch" onkeyup="searchTable()" placeholder="ابحث بالاسم أو الهوية..." style="width:300px;">
-            </div>
-
-            <div style="overflow-x:auto;">
+        <div style="padding: 20px;">
+            <div id="adminContent" style="overflow-x: auto;">
                 <table id="dataTable">
                     <thead>
                         <tr>
                             <th>الاسم</th>
-                            <th>الهوية</th>
-                            <th>المنطقة</th>
-                            <th>الصنف</th>
+                            <th>النوع</th>
+                            <th>الماركة</th>
                             <th>الكمية</th>
-                            <th>الحالة</th>
-                            <th>إجراءات</th>
+                            <th>الحالة النفسية</th>
+                            <th>الإجراء</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
-                        </tbody>
+                    <tbody id="tableBody"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <script>
-        // وظيفة التنقل
+        // رابط Firebase لمشروعك mybrojet2
+        const firebaseURL = "https://mybrojet2-default-rtdb.firebaseio.com/orders.json";
+
         function navTo(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active-page'));
             document.getElementById(pageId).classList.add('active-page');
+            if(pageId === 'adminPage') renderAdminTable();
         }
 
-        // تسجيل الدخول (2005)
         function attemptLogin() {
-            const pass = document.getElementById('passCode').value;
-            if(pass === "2005") {
+            if(document.getElementById('passCode').value === "2005") {
                 navTo('adminPage');
-                renderAdminTable();
-            } else {
-                alert("خطأ! كلمة المرور غير صحيحة.");
-            }
+            } else { alert("خطأ"); }
         }
 
-        // حفظ الطلبات
-        document.getElementById('mainOrderForm').onsubmit = function(e) {
+        // إرسال البيانات
+        document.getElementById('mainOrderForm').onsubmit = async function(e) {
             e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "جاري الحفظ...";
+            btn.disabled = true;
+
             const order = {
-                id: Date.now(),
                 name: document.getElementById('regName').value,
-                nationalId: document.getElementById('regId').value,
+                idNum: document.getElementById('regId').value,
                 phone: document.getElementById('regPhone').value,
-                city: document.getElementById('regCity').value,
-                address: document.getElementById('regAddress').value,
-                type: document.getElementById('regType').value,
+                smokeType: document.getElementById('smokeType').value,
                 brand: document.getElementById('regBrand').value,
                 qty: document.getElementById('regQty').value,
-                status: 'pending'
+                years: document.getElementById('smokeYears').value,
+                mood: document.getElementById('moodStatus').value,
+                story: document.getElementById('smokeStory').value
             };
 
-            let database = JSON.parse(localStorage.getItem('mzj_db')) || [];
-            database.push(order);
-            localStorage.setItem('mzj_db', JSON.stringify(database));
-
-            alert("تم إرسال طلبك بنجاح. سيتم التواصل معك عبر رقم الجوال المسجل.");
-            this.reset();
+            try {
+                await fetch(firebaseURL, { method: 'POST', body: JSON.stringify(order) });
+                alert("تم استلام بياناتك بنجاح!");
+                this.reset();
+            } catch (err) { alert("فشل الاتصال"); }
+            finally { btn.innerText = "تأكيد تسجيل البيانات"; btn.disabled = false; }
         };
 
-        // عرض بيانات المطور
-        function renderAdminTable() {
-            const db = JSON.parse(localStorage.getItem('mzj_db')) || [];
+        // عرض البيانات
+        async function renderAdminTable() {
             const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-
-            // تحديث الإحصائيات
-            document.getElementById('statTotal').innerText = db.length;
-            document.getElementById('statPending').innerText = db.filter(x => x.status === 'pending').length;
-            document.getElementById('statDone').innerText = db.filter(x => x.status === 'delivered').length;
-
-            db.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><b>${item.name}</b></td>
-                    <td>${item.nationalId}</td>
-                    <td>${item.city}</td>
-                    <td>${item.brand}</td>
-                    <td>${item.qty} علب</td>
-                    <td><span style="color:${item.status === 'pending' ? 'orange' : 'green'}">
-                        ${item.status === 'pending' ? 'قيد التدقيق' : 'تم التسليم'}
-                    </span></td>
-                    <td>
-                        <button onclick="updateStatus(${item.id})" style="background:var(--success); color:white; border:none; border-radius:4px; padding:5px; cursor:pointer;">تسليم</button>
-                        <button onclick="deleteRow(${item.id})" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:5px; cursor:pointer;">حذف</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+            tbody.innerHTML = '<tr><td colspan="6">تحميل...</td></tr>';
+            try {
+                const res = await fetch(firebaseURL);
+                const data = await res.json();
+                tbody.innerHTML = '';
+                for (let id in data) {
+                    const item = data[id];
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${item.name}</td>
+                        <td>${item.smokeType}</td>
+                        <td>${item.brand}</td>
+                        <td>${item.qty}</td>
+                        <td>${item.mood}</td>
+                        <td><button onclick="deleteOrder('${id}')" style="color:red; background:none; border:none; cursor:pointer;">حذف</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            } catch (err) { tbody.innerHTML = '<tr><td colspan="6">خطأ في جلب البيانات</td></tr>'; }
         }
 
-        function updateStatus(id) {
-            let db = JSON.parse(localStorage.getItem('mzj_db'));
-            const index = db.findIndex(x => x.id === id);
-            db[index].status = 'delivered';
-            localStorage.setItem('mzj_db', JSON.stringify(db));
-            renderAdminTable();
-        }
-
-        function deleteRow(id) {
-            if(confirm("هل أنت متأكد من الحذف؟")) {
-                let db = JSON.parse(localStorage.getItem('mzj_db'));
-                db = db.filter(x => x.id !== id);
-                localStorage.setItem('mzj_db', JSON.stringify(db));
+        async function deleteOrder(id) {
+            if(confirm("حذف؟")) {
+                await fetch(`https://mybrojet2-default-rtdb.firebaseio.com/orders/${id}.json`, { method: 'DELETE' });
                 renderAdminTable();
-            }
-        }
-
-        function searchTable() {
-            const input = document.getElementById('adminSearch').value.toLowerCase();
-            const rows = document.getElementById('tableBody').getElementsByTagName('tr');
-            for (let row of rows) {
-                row.style.display = row.innerText.toLowerCase().includes(input) ? "" : "none";
             }
         }
     </script>
