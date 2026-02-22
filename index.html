@@ -3,37 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مؤسسة مزاج المواطن | المنظومة العالمية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <title>إغاثة بلا حدود | المنظومة العالمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #0a0a0b;
-            --gold: #d4af37;
-            --gold-hover: #f1c40f;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #e0e0e0;
+            --primary: #0f172a;
+            --accent: #10b981;
+            --blue: #2563eb;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --danger: #ef4444;
         }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--bg);
+            color: var(--primary);
             margin: 0;
             overflow-x: hidden;
-            min-height: 100vh;
         }
 
-        canvas { position: fixed; top: 0; left: 0; z-index: -1; filter: blur(60px); opacity: 0.5; }
-
-        .page { display: none; animation: fadeIn 0.8s ease-out; }
-        .active-page { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
-
         header {
-            padding: 20px 8%;
+            background: var(--white);
+            padding: 15px 5%;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .brand-box { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+        .logo-svg { width: 45px; height: 45px; }
+        
+        .brand-text h1 { margin: 0; font-size: 20px; font-weight: 900; color: var(--primary); line-height: 1; }
+        .brand-text p { margin: 0; font-size: 10px; color: var(--accent); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white; padding: 60px 20px 100px; text-align: center;
+        }
+        .hero h2 { font-size: 32px; margin-bottom: 15px; font-weight: 900; }
+        .hero p { opacity: 0.8; max-width: 700px; margin: 0 auto; font-weight: 300; }
+
+        .container { max-width: 950px; margin: -60px auto 80px; padding: 0 20px; }
+        .main-card {
+            background: white; border-radius: 25px; padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            display: flex; align-items: center; gap: 10px;
+            margin: 30px 0 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;
+        }
+        .section-header span { background: var(--accent); color: white; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-weight: 900; font-size: 14px; }
+        .section-header h3 { margin: 0; font-size: 18px; color: var(--primary); }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+        .input-box { display: flex; flex-direction: column; gap: 8px; }
+        .input-box label { font-size: 13px; font-weight: 700; color: #64748b; }
+        
+        input, select, textarea {
+            padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px;
+            font-family: 'Cairo'; font-size: 14px; transition: 0.3s;
+        }
+        input:focus { border-color: var(--blue); outline: none; }
+
+        .btn-submit {
+            background: var(--accent); color: white; padding: 18px; border: none;
+            border-radius: 15px; font-size: 18px; font-weight: 900; width: 100%;
+            cursor: pointer; margin-top: 40px; box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .page { display: none; }
+        .active { display: block; }
+        
+        .admin-controls { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+        .search-input { flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #ddd; }
+
+        .stats-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-box { background: white; padding: 20px; border-radius: 15px; text-align: center; border-bottom: 4px solid var(--blue); shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .stat-box b { font-size: 26px; color: var(--primary); display: block; }
+
+        .table-wrap { overflow-x: auto; background: white; border-radius: 15px; }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        th { text-align: right; padding: 15px; background: #f8fafc; border-bottom: 2px solid #eee; }
+        td { padding: 15px; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+
+        .login-box { height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div id="homePage" class="page active">
+        <header>
+            <div class="brand-box">
+                <svg class="logo-svg" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="#0f172a"/>
+                    <path d="M30 50 H70 M50 30 V70" stroke="#10b981" stroke-width="8" stroke-linecap="round"/>
+                </svg>
+                <div class="brand-text">
+                    <h1>إغاثة بلا حدود</h1>
+                    <p>Relief Without Borders</p>
+                </div>
+            </div>
+            <button onclick="showPage('loginPage')" style="background:none; border:1px solid #ddd; padding:6px 15px; border-radius:8px; cursor:pointer;">دخول الإدارة</button>
+        </header>
+
+        <section class="hero">
+            <h2>المنصة العالمية الموحدة لتسجيل المساعدات</h2>
+            <p>نعمل على تنظيم الجهود الإغاثية لضمان وصول الدعم لكل أسرة محتاجة بكرامة وشفافية.</p>
+        </section>
+
+        <div class="container">
+            <div class="main-card">
+                <form id="reliefForm">
+                    <div class="section-header"><span>1</span><h3>البيانات التعريفية</h3></div>
+                    <div class="grid">
+                        <div class="input-box"><label>اسم رب الأسرة الكامل</label><input type="text" id="name" required></div>
+                        <div class="input-box"><label>رقم الهوية</label><input type="number" id="idNum" required></div>
+                        <div class="input-box"><label>رقم الواتساب</label><input type="tel" id="phone" required></div>
+                        <div class="input-box">
+                            <label>المحافظة</label>
+                            <select id="city">
+                                <option>شمال غزة</option><option>مدينة غزة</option><option>الوسطى</option><option>خانيونس</option><option>رفح</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-header"><span>2</span><h3>تفاصيل الاحتياج</h3></div>
+                    <div class="grid">
+                        <div class="input-box"><label>عدد أفراد الأسرة</label><input type="number" id="fSize" required></div>
+                        <div class="input-box">
+                            <label>نوع المساعدة المطلوبة</label>
+                            <select id="need">
+                                <option>طرود غذائية</option><option>مساعدات نقدية</option><option>مستلزمات طبية</option><option>حليب أطفال</option>
+                            </select>
+                        </div>
+                        <div class="input-box">
+                            <label>هل يوجد ذوي احتياجات خاصة؟</label>
+                            <select id="special"><option>لا يوجد</option><option>نعم</option></select>
+                        </div>
+                    </div>
+
+                    <div class="input-box" style="margin-top:20px;">
+                        <label>ملاحظات إضافية</label>
+                        <textarea id="notes" rows="3"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="subBtn">تأكيد التسجيل في المنظومة</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginPage" class="page">
+        <div class="login-box">
+            <div class="main-card" style="width:340px; text-align:center;">
+                <h2>دخول الموظفين</h2>
+                <input type="password" id="passInput" placeholder="رمز الوصول" style="width:100%; text-align:center; margin:20px 0;">
+                <button onclick="login()" class="btn-submit" style="margin:0">دخول</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPage" class="page">
+        <header>
+            <div class="brand-box"><h1>لوحة التحكم الإغاثية</h1></div>
+            <button onclick="logout()" style="background:var(--danger); color:white; border:none; padding:8px 20px; border-radius:8px; cursor:pointer;">خروج</button>
+        </header>
+
+        <div class="container" style="max-width:95%; margin-top:30px;">
+            <div class="stats-bar">
+                <div class="stat-box">إجمالي الحالات<b id="stTotal">0</b></div>
+                <div class="stat-box">إجمالي الأفراد<b id="stPeople">0</b></div>
+                <div class="stat-box">حالات خاصة<b id="stSpecial">0</b></div>
+            </div>
+
+            <div class="admin-controls">
+                <input type="text" id="adminSearch" class="search-input" placeholder="بحث بالاسم أو الهوية..." oninput="filterAdminData()">
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>المستفيد</th>
+                            <th>الهوية</th>
+                            <th>المنطقة</th>
+                            <th>الأفراد</th>
+                            <th>الاحتياج</th>
+                            <th>إجراء</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // الربط بقاعدة البيانات المطلوبة
+        const DB_URL = "https://mybrojet2-default-rtdb.firebaseio.com/orders.json";
+        let localData = [];
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            if(pageId === 'adminPage') fetchAdminData();
+        }
+
+        function login() {
+            if(document.getElementById('passInput').value === "2005") { // الرمز الخاص بالقاعدة الجديدة
+                sessionStorage.setItem('isAdmin', 'true');
+                showPage('adminPage');
+            } else { alert("رمز الدخول غير صحيح"); }
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            showPage('homePage');
+        }
+
+        // إرسال البيانات
+        document.getElementById('reliefForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('subBtn');
+            btn.innerText = "جاري المزامنة..."; btn.disabled = true;
+
+            const order = {
+                name: document.getElementById('name').value,
+                idNum: document.getElementById('idNum').value, // تغيير الاسم ليتطابق مع حقول القاعدة الجديدة
+                phone: document.getElementById('phone').value,
+                city: document.getElementById('city').value,
+                size: document.getElementById('fSize').value,
+                need: document.getElementById('need').value,
+                special: document.getElementById('special').value,
+                notes: document.getElementById('notes').value,
+                date: new Date().getTime()
+            };
+
+            try {
+                await fetch(DB_URL, { method: 'POST', body: JSON.stringify(order) });
+                alert("تم تسجيل طلبك بنجاح في قاعدة بيانات المنظومة.");
+                this.reset();
+            } catch(e) { alert("فشل الاتصال بالقاعدة."); }
+            finally { btn.innerText = "تأكيد التسجيل في المنظومة"; btn.disabled = false; }
+        };
+
+        // جلب البيانات للوحة التحكم
+        async function fetchAdminData() {
+            if(sessionStorage.getItem('isAdmin') !== 'true') return showPage('loginPage');
+            const tbody = document.getElementById('tBody');
+            tbody.innerHTML = '<tr><td colspan="6">جاري جلب البيانات من السيرفر...</td></tr>';
+            
+            try {
+                const res = await fetch(DB_URL);
+                const data = await res.json();
+                localData = data ? Object.entries(data) : [];
+                renderTable(localData);
+            } catch(e) { tbody.innerHTML = '<tr><td colspan="6">خطأ في جلب البيانات.</td></tr>'; }
+        }
+
+        function renderTable(dataArray) {
+            const tbody = document.getElementById('tBody');
+            tbody.innerHTML = '';
+            let total = 0, people = 0, specialCount = 0;
+
+            dataArray.forEach(([key, item]) => {
+                total++;
+                people += parseInt(item.size || 0);
+                if(item.special === 'نعم') specialCount++;
+
+                tbody.innerHTML += `<tr>
+                    <td><b>${item.name}</b><br><small>${item.phone}</small></td>
+                    <td>${item.idNum}</td>
+                    <td>${item.city}</td>
+                    <td>${item.size} فرد</td>
+                    <td><b style="color:var(--blue)">${item.need}</b></td>
+                    <td><button onclick="deleteOrder('${key}')" style="color:red; background:none; border:none; cursor:pointer;">حذف</button></td>
+                </tr>`;
+            });
+
+            document.getElementById('stTotal').innerText = total;
+            document.getElementById('stPeople').innerText = people;
+            document.getElementById('stSpecial').innerText = specialCount;
+        }
+
+        function filterAdminData() {
+            const term = document.getElementById('adminSearch').value.toLowerCase();
+            const filtered = localData.filter(([key, item]) => 
+                item.name.toLowerCase().includes(term) || item.idNum.toString().includes(term)
+            );
+            renderTable(filtered);
+        }
+
+        async function deleteOrder(key) {
+            if(confirm("هل تريد حذف هذا السجل نهائياً؟")) {
+                await fetch(`https://mybrojet2-default-rtdb.firebaseio.com/orders/${key}.json`, { method: 'DELETE' });
+                fetchAdminData();
+            }
+        }
+    </script>
+</body>
+</html>
             align-items: center;
             background: rgba(0,0,0,0.7);
             backdrop-filter: blur(15px);
